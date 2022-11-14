@@ -13,7 +13,6 @@ import { createContext } from "react";
 import { fetchConfig } from "services/serviceService";
 import { app, auth,  handleLogin } from "./firebase/app";
 import useFirebaseAuthentication from "hooks/firebaseAuth";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { unstable_batchedUpdates } from "react-dom";
 export const ConfigContext = createContext(null);
 export const AuthContext = createContext(null);
@@ -61,20 +60,6 @@ function App() {
     };
     getConfig();
     getLocation();
-    let authFlag = true;
-    const auth = getAuth();
-    // onAuthStateChanged(auth, (user) => {
-    //   if(authFlag) {
-    //     authFlag = false
-    //   if (user != currentUser) {
-    //     setCurrentUser(user)
-    //   } 
-    // }
-    //   // else {
-    //   //   // User is signed out
-    //   //   // ...
-    //   // }
-    // });
   }, []);
 
   useEffect(() => {

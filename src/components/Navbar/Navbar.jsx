@@ -19,45 +19,20 @@ import { AuthContext } from "App";
 import { useEffect } from "react";
 
 const defaultLinks = [{ name: "Iniciar sesion", url: "home" }];
-const userLinks = [
-  { name: "Inicio", url: "home" },
-  { name: "Buscar Servicios", url: "services" },
-  { name: "Mis Servicios", url: "services" },
-];
 
-const prestadorLinks = [
-  { name: "Inicio", url: "home" },
-  { name: "Buscar Servicios", url: "services" },
-  { name: "Agregar servicio", url: "new" },
-  { name: "Mis Servicios", url: "services" },
-];
-
-const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 const NavBar = () => {
-  const [anchorElNav, setAnchorElNav] = React.useState(null);
-  const [anchorElUser, setAnchorElUser] = React.useState(null);
-  const [linksToRender, setLinksToRender] = React.useState(defaultLinks);
   const user = useContext(AuthContext);
-
-  const navBarLinks = [
+  const [navbarLinks, setNavBarLinks] = React.useState([
     { name: "Buscar Servicios", url: "services" },
-    { name: "Agregar servicio", url: "new" },
     { name: "Mis Servicios", url: "myservices" },
-  ];
+  ])
 
-  const handleOpenNavMenu = (event) => {
-    setAnchorElNav(event.currentTarget);
-  };
-
-  const handleCloseNavMenu = () => {
-    setAnchorElNav(null);
-  };
-
-  const handleCloseUserMenu = () => {
-    setAnchorElUser(null);
-  };
-
+useEffect(()=>{
+  if(user && user.isPrestador){
+    setNavBarLinks([...navbarLinks, { name: "Agregar servicio", url: "new" }])
+  }
+},[user])
   return (
     <AppBar position="static">
       <Container maxWidth="xl">
@@ -100,11 +75,10 @@ const NavBar = () => {
             HelpFindr
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-            {navBarLinks &&
-              navBarLinks.map((page, index) => (
+            {navbarLinks &&
+              navbarLinks.map((page, index) => (
                 <Button
                   key={index}
-                  onClick={handleCloseNavMenu}
                   sx={{ my: 2, color: "white", display: "block" }}
                   href={"/" + page.url}
                 >

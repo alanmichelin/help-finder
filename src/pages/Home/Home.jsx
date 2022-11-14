@@ -1,4 +1,5 @@
 import HomeComponent from "../../components/Home/Home.jsx";
+
 const Home = () => {
   return <HomeComponent />;
 };
