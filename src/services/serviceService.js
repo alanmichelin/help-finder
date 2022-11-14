@@ -54,7 +54,7 @@ export const fetchServices = async (params) => {
     if (!!params.tipo && params.tipo !== "CUALQUIERA") {
       constraints.push(where("tipo", "==", params.tipo));
     }
-    if (params.priceMax !== 0) {
+    if (!!params.priceMax && params.priceMax !== 0) {
       constraints.push(where("precio", "<", params.priceMax));
     }
     q = query(collection(db, "servicios"), ...constraints);
@@ -109,6 +109,8 @@ export const fetchPrestadorById = async (id) => {
   }
   return data;
 };
+
+
 
 export const getRequestsPrestador = async (id) => {
   let ref = collection(db, "requests");

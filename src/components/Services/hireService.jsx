@@ -6,7 +6,7 @@ import ServiceSchedule from "./serviceSchedule";
 import SelectTime from "./serviceTimeSelect.jsx";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { addServiceRequest, fetchPrestadorById, fetchService, getDataFromGeolocation } from "services/serviceService";
+import { addServiceRequest, fetchPrestadorById, fetchService, getDataFromGeolocation, getRequestsPrestador } from "services/serviceService";
 import { AuthContext } from "App";
 import { Timestamp, GeoPoint } from "@firebase/firestore";
 export const HireService = () => {
@@ -24,7 +24,7 @@ export const HireService = () => {
     "2022-10-25T13:16:51-03:00",
     "2022-10-25T15:16:51-03:00",
   ];
-  const [prestador,setPrestador] = useState()
+
   const [busyDates, setBusyDates] = useState();
   const [coords, setCoords] = useState({ latitude: 0, longitude: 0 });
   const [location,setLocation] = useState('')
@@ -51,18 +51,18 @@ export const HireService = () => {
   ,[])
   const _fetchPrestador = async () => {
     console.log(service.prestador.id);
-    const _prestador = await fetchPrestadorById(
+    const _prestadorRequests = await getRequestsPrestador(
       service.prestador.id.toString()
     );
-    setPrestador(_prestador)
-    const horarios = []
-    if(_prestador.requestedBy){
 
-      _prestador.requestedBy.forEach(x => {
-        console.log(x)
-        horarios.push(moment(new Timestamp(x.horario.seconds, x.horario.nanoseconds).toDate()).format())
+    const horarios = []
+
+
+    _prestadorRequests.forEach(x => {
+        if(x.accepted)
+          horarios.push(moment(new Timestamp(x.horario.seconds, x.horario.nanoseconds).toDate()).format())
       })
-    }
+    
     console.log(horarios)
     setBusyDates(horarios);
     // setBusyDates(_busyDates);
@@ -136,3 +136,4 @@ export const HireService = () => {
 };
 
 export default HireService;
+
