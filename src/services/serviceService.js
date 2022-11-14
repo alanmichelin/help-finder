@@ -77,7 +77,7 @@ export const setPrestador = (id, _isPrestador) => {
 export const updateCalificacion = async (puntuacion, text, id) => {
   const prestador = await fetchPrestadorById(id);
   let ref = doc(db, "users", id);
-  updateDoc(ref, {
+  await updateDoc(ref, {
     puntuacionTotal: increment(puntuacion),
     cantPuntuaciones: increment(1),
     promedio:
@@ -138,20 +138,20 @@ export const addServiceRequest = async (service) => {
   return await addDoc(collection(db, "requests"), service);
 };
 
-export const acceptServiceRequest = (id) => {
+export const acceptServiceRequest = async (id) => {
   let ref = doc(db, "requests", id);
-  updateDoc(ref, { accepted: true });
+  return await updateDoc(ref, { accepted: true });
 };
 
 export const completeServiceRequest = async (id) => {
   let ref = doc(db, "requests", id);
-  updateDoc(ref, { completed: true });
+  await updateDoc(ref, { completed: true });
   return "ok"
 };
 
-export const rejectServiceRequest = (id) => {
+export const rejectServiceRequest = async (id) => {
   let ref = doc(db, "requests", id);
-  updateDoc(ref, { cancelled: true });
+  return await updateDoc(ref, { cancelled: true });
 };
 
 export const fetchConfig = async () => {

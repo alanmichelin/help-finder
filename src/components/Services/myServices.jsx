@@ -12,11 +12,15 @@ import { Timestamp } from "@firebase/firestore";
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
 import Calificate from "./calificate";
+import { useNavigate } from "react-router-dom";
+
+
 const MyServices = () => {
   const [requests, setRequests] = useState([]); // request hechas del lado usuario
   const [requestedBy, setRequestedBy] = useState([]); // request hehcas del lado prestador
-
   const auth = useContext(AuthContext);
+  let navigate = useNavigate();
+
 
   const fetchRequestPrestador = async () => {
     const res = await getRequestsPrestador(auth.id.toString());
@@ -33,6 +37,7 @@ const MyServices = () => {
     let request = requests.find(x=> x.id === requestId)
     await updateCalificacion(puntuacion,text,request.prestador)
     await completeServiceRequest(requestId)
+    navigate(0)
     // window.location.reload();
     
   }
@@ -57,13 +62,18 @@ const MyServices = () => {
 };
 
 const RequestedByItem = ({request}) =>{
+  let navigate = useNavigate();
   
-  const handleConfirm = () =>{
-    acceptServiceRequest(request.id)
+  const handleConfirm = async () =>{
+    await acceptServiceRequest(request.id)
+    setTimeout(()=>{navigate(0)},1500)
+
   }
 
-  const handleReject = () =>{
-    rejectServiceRequest(request.id)
+  const handleReject = async () =>{
+    await rejectServiceRequest(request.id)
+    setTimeout(()=>{navigate(0)},1500)
+
   }
   return(
     <Item style={{height:"160px"}}>
@@ -115,6 +125,7 @@ const RequestItem = ({request,handleCalification}) =>{
       <Grid item xs={10} style={{ textAlign: "left" }}>
         <h2>Solicitaste un servicio a {request.prestadorInfo.nombre}</h2>
         <p>
+        {!request.accepted && !request.cancelled && `Estado: Pendiente`}
         {request.accepted && !request.completed  && `Estado: Aceptada`}
         {request.cancelled && `Estado: Cancelada`}
         {request.completed && request.accepted  && `Estado: Completada`}

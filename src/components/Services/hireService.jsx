@@ -9,6 +9,8 @@ import { useEffect, useState } from "react";
 import { addServiceRequest, fetchPrestadorById, fetchService, getDataFromGeolocation, getRequestsPrestador } from "services/serviceService";
 import { AuthContext } from "App";
 import { Timestamp, GeoPoint } from "@firebase/firestore";
+import { useNavigate } from "react-router-dom";
+
 export const HireService = () => {
   const [service, setService] = useState({
     nombre: "",
@@ -17,7 +19,7 @@ export const HireService = () => {
     descripcion: "",
   });
   const user = React.useContext(AuthContext);
-
+  let navigate = useNavigate();
   let busyDatesMock = [
     "2022-10-24T13:16:51-03:00",
     "2022-10-25T10:16:51-03:00",
@@ -77,7 +79,7 @@ export const HireService = () => {
     }
   }, [service]);
 
-  const handleConfirmService = (day, selectedHour) => {
+  const handleConfirmService = async (day, selectedHour) => {
     console.log(day,selectedHour)
     let parsedDate = day.split(" ")[1].split("/");
     let horario = moment(moment(
@@ -105,7 +107,8 @@ export const HireService = () => {
       },
     };
     console.log(serviceRequestData)
-    addServiceRequest(serviceRequestData)
+    await addServiceRequest(serviceRequestData)
+    setTimeout(()=>{navigate('/myservices')},1500)
   };
 
 
